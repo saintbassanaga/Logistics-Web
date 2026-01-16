@@ -23,117 +23,153 @@ interface DashboardCard {
   imports: [RouterLink, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="dashboard">
-      <header class="dashboard-header">
-        <div class="header-content">
-          <h1 class="dashboard-title">
+    <div class="p-6 max-w-[1600px] mx-auto space-y-6">
+
+      <!-- Header -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-semibold text-slate-800">
             @switch (keycloak.actorType()) {
-              @case (ActorType.PLATFORM_ADMIN) {
-                Platform Overview
-              }
-              @case (ActorType.AGENCY_EMPLOYEE) {
-                Agency Dashboard
-              }
-              @case (ActorType.CUSTOMER) {
-                My Dashboard
-              }
-              @default {
-                Dashboard
-              }
+              @case (ActorType.PLATFORM_ADMIN) { Platform Analytics }
+              @case (ActorType.AGENCY_EMPLOYEE) { Agency Analytics }
+              @case (ActorType.CUSTOMER) { My Overview }
+              @default { Dashboard }
             }
           </h1>
-          <p class="dashboard-subtitle">
-            Welcome back! Here's what's happening today.
+          <p class="text-sm text-slate-500 mt-1">
+            Operational metrics & performance overview
           </p>
         </div>
-
-        @if (keycloak.isAgencyEmployee()) {
-          <div class="tenant-badge">
-            <span class="badge-icon">🏢</span>
-            <span class="badge-text">Agency Context Active</span>
-          </div>
-        }
-      </header>
-
-      <div class="dashboard-grid">
-        @for (card of dashboardCards(); track card.title) {
-          <article class="dashboard-card" [class.clickable]="card.route">
-            @if (card.route) {
-              <a [routerLink]="card.route" class="card-link">
-                <ng-container *ngTemplateOutlet="cardContent; context: { card }" />
-              </a>
-            } @else {
-              <ng-container *ngTemplateOutlet="cardContent; context: { card }" />
-            }
-          </article>
-        }
       </div>
 
-      <ng-template #cardContent let-card="card">
-        <div class="card-header">
-          <span class="card-icon">{{ card.icon }}</span>
-          <h3 class="card-title">{{ card.title }}</h3>
-        </div>
-        <div class="card-body">
-          <span class="card-value">{{ card.value }}</span>
-          @if (card.change) {
-            <span
-              class="card-change"
-              [class.up]="card.trend === 'up'"
-              [class.down]="card.trend === 'down'"
-            >
-              @if (card.trend === 'up') { ↑ }
-              @else if (card.trend === 'down') { ↓ }
-              {{ card.change }}
-            </span>
-          }
-        </div>
-      </ng-template>
+      <!-- Grid -->
+      <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
-      <section class="dashboard-section">
-        <h2 class="section-title">Quick Actions</h2>
-        <div class="quick-actions">
-          @if (keycloak.isAgencyEmployee()) {
-            @if (keycloak.hasRole('SHIPMENT_MANAGER')) {
-              <a routerLink="/shipments/create" class="action-button primary">
-                <span class="action-icon">➕</span>
-                <span class="action-label">New Shipment</span>
-              </a>
-            }
-            <a routerLink="/parcels" class="action-button">
-              <span class="action-icon">📦</span>
-              <span class="action-label">View Parcels</span>
-            </a>
-            <a routerLink="/shipments" class="action-button">
-              <span class="action-icon">🚚</span>
-              <span class="action-label">View Shipments</span>
-            </a>
-          }
+        <!-- Website Analytics (BIG CARD) -->
+        <div class="xl:col-span-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl text-white p-6 relative overflow-hidden">
 
-          @if (keycloak.isCustomer()) {
-            <a routerLink="/my-shipments" class="action-button primary">
-              <span class="action-icon">📋</span>
-              <span class="action-label">My Shipments</span>
-            </a>
-            <a routerLink="/track" class="action-button">
-              <span class="action-icon">🔍</span>
-              <span class="action-label">Track Parcel</span>
-            </a>
-          }
+          <div class="relative z-10">
+            <h2 class="text-lg font-semibold">Website Analytics</h2>
+            <p class="text-sm opacity-80">Total 28.5% Conversion Rate</p>
 
-          @if (keycloak.isPlatformAdmin()) {
-            <a routerLink="/admin/agencies" class="action-button primary">
-              <span class="action-icon">🏢</span>
-              <span class="action-label">Manage Agencies</span>
-            </a>
-            <a routerLink="/admin/users" class="action-button">
-              <span class="action-icon">👥</span>
-              <span class="action-label">Manage Users</span>
-            </a>
-          }
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+              <div>
+                <p class="text-sm opacity-80">Sessions</p>
+                <p class="text-xl font-bold">1.5k</p>
+              </div>
+              <div>
+                <p class="text-sm opacity-80">Page Views</p>
+                <p class="text-xl font-bold">3.1k</p>
+              </div>
+              <div>
+                <p class="text-sm opacity-80">Leads</p>
+                <p class="text-xl font-bold">1.2k</p>
+              </div>
+              <div>
+                <p class="text-sm opacity-80">Conversions</p>
+                <p class="text-xl font-bold">12%</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Decorative -->
+          <div class="absolute right-6 top-6 text-[160px] opacity-10">📦</div>
         </div>
-      </section>
+
+        <!-- Right Column -->
+        <div class="space-y-6">
+
+          <!-- Average Daily Sales -->
+          <div class="bg-white rounded-xl border border-slate-200 p-6">
+            <p class="text-sm text-slate-500">Average Daily Sales</p>
+            <p class="text-2xl font-semibold mt-2">$28,450</p>
+            <p class="text-sm text-green-600 mt-1">+18.2%</p>
+            <div class="mt-4 h-16 bg-slate-100 rounded"></div>
+          </div>
+
+          <!-- Sales Overview -->
+          <div class="bg-white rounded-xl border border-slate-200 p-6">
+            <p class="text-sm text-slate-500">Sales Overview</p>
+            <p class="text-2xl font-semibold mt-2">$42.5k</p>
+
+            <div class="grid grid-cols-2 gap-4 mt-4 text-sm">
+              <div>
+                <p class="text-slate-500">Orders</p>
+                <p class="font-semibold">6,440</p>
+              </div>
+              <div>
+                <p class="text-slate-500">Visits</p>
+                <p class="font-semibold">12,749</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bottom Grid -->
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+        <!-- Earning Reports -->
+        <div class="bg-white rounded-xl border border-slate-200 p-6">
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="font-semibold">Earning Reports</h3>
+              <p class="text-sm text-slate-500">Weekly earnings overview</p>
+            </div>
+            <span class="text-green-600 text-sm font-medium">+4.2%</span>
+          </div>
+
+          <p class="text-3xl font-bold mt-4">$468</p>
+
+          <div class="grid grid-cols-3 gap-4 mt-6 text-sm">
+            <div>
+              <p class="text-slate-500">Earnings</p>
+              <p class="font-semibold">$545.69</p>
+            </div>
+            <div>
+              <p class="text-slate-500">Profit</p>
+              <p class="font-semibold">$256.34</p>
+            </div>
+            <div>
+              <p class="text-slate-500">Expense</p>
+              <p class="font-semibold text-red-600">$74.19</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Support Tracker -->
+        <div class="bg-white rounded-xl border border-slate-200 p-6 flex flex-col justify-between">
+          <div>
+            <h3 class="font-semibold">Support Tracker</h3>
+            <p class="text-sm text-slate-500">Last 7 days</p>
+          </div>
+
+          <div class="flex items-center justify-between mt-6">
+            <div>
+              <p class="text-3xl font-bold">164</p>
+              <p class="text-sm text-slate-500">Total Tickets</p>
+
+              <div class="mt-4 space-y-2 text-sm">
+                <p>🟢 New: 142</p>
+                <p>🟡 Open: 28</p>
+                <p>🔵 Response: 1 Day</p>
+              </div>
+            </div>
+
+            <div class="text-center">
+              <div class="w-28 h-28 rounded-full border-8 border-indigo-500 flex items-center justify-center">
+                <span class="font-semibold">85%</span>
+              </div>
+              <p class="text-sm text-slate-500 mt-2">Completed</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
     </div>
+
   `,
   styles: `
     .dashboard {

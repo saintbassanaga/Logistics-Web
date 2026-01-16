@@ -104,7 +104,7 @@ export class KeycloakService {
       return false;
     }
 
-    // Debug: Log current URL to see if auth code is present
+    // Debug: Log the current URL to see if auth code is present
     console.log('KeycloakService: Current URL:', window.location.href);
     console.log('KeycloakService: URL has code param:', window.location.search.includes('code='));
 
@@ -197,7 +197,7 @@ export class KeycloakService {
   }
 
   /**
-   * Logout and redirect to Keycloak logout page
+   * Logout and redirect to the Keycloak logout page
    */
   async logout(redirectUri?: string): Promise<void> {
     if (!this.keycloak) {
@@ -220,7 +220,7 @@ export class KeycloakService {
     }
 
     try {
-      // Refresh token if it expires within the threshold
+      // Refresh the token if it expires within the threshold
       const refreshed = await this.keycloak.updateToken(
         environment.tokenRefreshThreshold
       );
@@ -245,7 +245,7 @@ export class KeycloakService {
   }
 
   /**
-   * Check if user has a specific role
+   * Check if a user has a specific role
    */
   hasRole(role: string): boolean {
     const currentUser = this._state().user;
@@ -253,7 +253,7 @@ export class KeycloakService {
   }
 
   /**
-   * Check if user has any of the specified roles
+   * Check if a user has any of the specified roles
    */
   hasAnyRole(roles: string[]): boolean {
     const currentUser = this._state().user;
@@ -262,7 +262,7 @@ export class KeycloakService {
   }
 
   /**
-   * Check if user has all of the specified roles
+   * Check if a user has all the specified roles
    */
   hasAllRoles(roles: string[]): boolean {
     const currentUser = this._state().user;
@@ -271,7 +271,7 @@ export class KeycloakService {
   }
 
   /**
-   * Check if user belongs to a specific agency
+   * Check if a user belongs to a specific agency
    */
   belongsToAgency(agencyId: string): boolean {
     const currentUser = this._state().user;
@@ -344,7 +344,7 @@ export class KeycloakService {
 
     this.keycloak.onTokenExpired = () => {
       console.warn('KeycloakService: Token expired, attempting refresh');
-      this.refreshToken();
+      this.refreshToken().finally(null);
     };
 
     this.keycloak.onAuthLogout = () => {

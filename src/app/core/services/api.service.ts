@@ -86,7 +86,7 @@ export class ApiService {
   }
 
   /**
-   * Build HttpHeaders from object
+   * Build HttpHeaders from an object
    */
   private buildHeaders(headers?: ApiRequestOptions['headers']): HttpHeaders {
     let httpHeaders = new HttpHeaders();
