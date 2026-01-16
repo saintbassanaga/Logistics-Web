@@ -1,12 +1,37 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
-
+import {
+  ApplicationConfig,
+  provideZoneChangeDetection,
+  provideAppInitializer, inject, // <--- New Import
+} from '@angular/core';
+import { provideRouter, withViewTransitions, withComponentInputBinding } from '@angular/router';
+import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http';
 import { routes } from './app.routes';
+import {
+  authInterceptor,
+  tenantInterceptor,
+  errorInterceptor,
+  loggingInterceptor,
+  KeycloakService,
+} from './core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideZonelessChangeDetection(),
-    provideRouter(routes)
-  ]
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes, withViewTransitions(), withComponentInputBinding()),
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([
+        loggingInterceptor,
+        authInterceptor,
+        tenantInterceptor,
+        errorInterceptor,
+      ])
+    ),
+
+    // Modern replacement for APP_INITIALIZER
+    provideAppInitializer(() => {
+      const keycloakService = inject(KeycloakService);
+      return keycloakService.init();
+    }),
+  ],
 };

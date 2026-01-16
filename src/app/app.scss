@@ -1,0 +1,20 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main.with-nav {
+  padding-top: var(--navbar-height, 64px);
+}
